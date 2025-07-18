@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Loja Virtual</title>
+    <!-- Link para Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .header {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header h1 {
+            color: #333;
+            margin: 0;
+        }
+        .logout-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .logout-button:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px 0;
+        }
+        .product-card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        .product-card img {
+            max-width: 100%;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background-color: #e9ecef;
+        }
+        .product-card h3 {
+            color: #333;
+            margin: 10px 0;
+            font-size: 1.4em;
+        }
+        .product-card p {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        .product-card .price {
+            font-size: 1.6em;
+            color: #007bff;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .buy-button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
+        .buy-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            color: #333;
+            background-color: #e9ecef;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Modal de Pagamento */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #333;
+            text-decoration: none;
+        }
+        .modal-content h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: calc(100% - 20px);
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .pay-button {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .pay-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+        .payment-message {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .payment-message.success {
+            color: #28a745;
+        }
+        .payment-message.error {
+            color: #dc3545;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .header h1 {
+                margin-bottom: 15px;
+            }
+            .products-container {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Bem-vindo à Loja Virtual!</h1>
+        <button id="logout-button" class="logout-button">Sair</button>
+    </div>
+
+    <div id="products-container" class="products-container">
+        <!-- Produtos serão carregados aqui pelo JavaScript -->
+        <p class="message">Carregando produtos...</p>
+    </div>
+
+    <!-- Modal de Pagamento -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Finalizar Compra</h2>
+            <p style="color: #dc3545; font-weight: bold; text-align: center;">
+                ATENÇÃO: Este é um formulário de pagamento SIMULADO.
+                Nenhum dado real de cartão será processado ou armazenado.
+                Os dados inseridos aqui são APENAS para fins de teste e demonstração.
+            </p>
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label for="card-number">Número do Cartão (Simulado)</label>
+                    <input type="text" id="card-number" placeholder="XXXX XXXX XXXX XXXX" required pattern="[0-9]{13,16}" title="Apenas números, 13 a 16 dígitos">
+                </div>
+                <div class="form-group">
+                    <label for="card-name">Nome no Cartão (Simulado)</label>
+                    <input type="text" id="card-name" placeholder="Nome Completo" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expiry-date">Validade (MM/AA - Simulado)</label>
+                        <input type="text" id="expiry-date" placeholder="MM/AA" required pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Formato MM/AA">
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV (Simulado)</label>
+                        <input type="text" id="cvv" placeholder="XXX" required pattern="[0-9]{3,4}" title="3 ou 4 dígitos">
+                    </div>
+                </div>
+                <button type="submit" class="pay-button">Pagar</button>
+                <p id="payment-message" class="payment-message"></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutButton = document.getElementById('logout-button');
+            const productsContainer = document.getElementById('products-container');
+            const paymentModal = document.getElementById('paymentModal');
+            const closeButton = document.querySelector('.close-button');
+            const paymentForm = document.getElementById('paymentForm');
+            const paymentMessage = document.getElementById('payment-message');
+
+            let selectedProduct = null;
+            const API_URL = 'https://api-backend-2025.onrender.com'; // Sua URL do backend no Render
+
+            // --- FUNÇÃO: Verifica se o usuário está logado ---
+            const checkLoginStatus = () => {
+                const token = localStorage.getItem('authToken');
+                console.log('checkLoginStatus: Verificando token no localStorage...');
+                if (!token) {
+                    console.log('checkLoginStatus: Token ausente. Redirecionando para login.html');
+                    window.location.href = '/login.html'; // Redireciona para login.html
+                    return false;
+                }
+                console.log('checkLoginStatus: Token presente.');
+                return true;
+            };
+
+            // Lógica de logout
+            logoutButton.addEventListener('click', () => {
+                console.log('Botão Sair clicado. Removendo authToken do localStorage.');
+                localStorage.removeItem('authToken');
+                window.location.href = '/login.html'; // Redireciona para login.html
+            });
+
+            // Função para buscar e exibir os produtos do backend
+            const fetchAndDisplayProducts = async () => {
+                productsContainer.innerHTML = '<p class="message">Carregando produtos do servidor...</p>'; // Mensagem de carregamento
+                const token = localStorage.getItem('authToken'); // Pega o token para a requisição
+
+                if (!token) {
+                    console.log('fetchAndDisplayProducts: Token ausente, não é possível carregar produtos. Redirecionando.');
+                    productsContainer.innerHTML = '<p class="message error">Erro: Você não está logado. Redirecionando para o login...</p>';
+                    setTimeout(() => window.location.href = '/login.html', 2000);
+                    return;
+                }
+
+                try {
+                    console.log('fetchAndDisplayProducts: Tentando buscar produtos de:', `${API_URL}/products`);
+                    const response = await fetch(`${API_URL}/products`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}` // Envia o token na requisição
+                        }
+                    });
+                    
+                    console.log('fetchAndDisplayProducts: Resposta da API de produtos:', response.status, response.statusText);
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error('fetchAndDisplayProducts: Erro na resposta da API:', errorData);
+                        // Se for 401 ou 403, o token provavelmente é inválido/expirado
+                        if (response.status === 401 || response.status === 403) {
+                            productsContainer.innerHTML = '<p class="message error">Sua sessão expirou ou o token é inválido. Redirecionando para o login...</p>';
+                            localStorage.removeItem('authToken');
+                            setTimeout(() => window.location.href = '/login.html', 2000);
+                        } else {
+                            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                        }
+                        return; // Sai da função após lidar com o erro
+                    }
+                    
+                    const products = await response.json(); // Converte a resposta para JSON
+                    console.log('fetchAndDisplayProducts: Produtos recebidos:', products);
+
+                    productsContainer.innerHTML = ''; // Limpa a mensagem de carregamento
+
+                    if (products.length > 0) {
+                        products.forEach(product => {
+                            const productCard = document.createElement('div');
+                            productCard.classList.add('product-card');
+                            const displayPrice = parseFloat(product.price).toFixed(2).replace('.', ',');
+                            
+                            // Usa product.image_url do backend, com fallback para placeholder
+                            const imageUrl = product.image_url || 'https://placehold.co/300x200/cccccc/333333?text=Sem+Imagem';
+
+                            productCard.innerHTML = `
+                                <img src="${imageUrl}" alt="${product.name}" onerror="this.onerror=null;this.src='https://placehold.co/300x200/cccccc/333333?text=Sem+Imagem';">
+                                <h3>${product.name}</h3>
+                                <p>${product.description}</p>
+                                <span class="price">R$ ${displayPrice}</span>
+                                <button class="buy-button" data-product-id="${product.id}">
+                                    <i class="fas fa-shopping-cart"></i> Comprar
+                                </button>
+                            `;
+                            productsContainer.appendChild(productCard);
+                        });
+                    } else {
+                        productsContainer.innerHTML = '<p class="message">Nenhum produto disponível no momento. Adicione produtos no painel de administração.</p>';
+                    }
+                } catch (error) {
+                    console.error('fetchAndDisplayProducts: Erro ao buscar produtos:', error);
+                    productsContainer.innerHTML = `<p class="message error">Erro ao carregar produtos: ${error.message}. Verifique a conexão com o backend.</p>`;
+                }
+            };
+
+            // Abre o modal de pagamento quando o botão "Comprar" é clicado
+            productsContainer.addEventListener('click', (event) => {
+                const buyButton = event.target.closest('.buy-button');
+                if (buyButton) {
+                    // Verifica o status de login antes de prosseguir com a compra
+                    if (!checkLoginStatus()) {
+                        return; // Já redirecionou para login.html
+                    }
+
+                    const productId = buyButton.dataset.productId; // Pega o ID como string
+                    console.log('Botão Comprar clicado. ID do Produto (dataset):', productId);
+                    
+                    // Fetch para obter detalhes do produto (requer autenticação)
+                    const token = localStorage.getItem('authToken');
+                    if (!token) {
+                        console.log('Evento Comprar: Token ausente. Redirecionando para login.');
+                        // Já tratado por checkLoginStatus, mas para garantir
+                        return;
+                    }
+
+                    fetch(`${API_URL}/products/${productId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                        .then(response => {
+                            console.log('Evento Comprar: Resposta da API de detalhes do produto:', response.status, response.statusText);
+                            if (!response.ok) {
+                                if (response.status === 401 || response.status === 403) {
+                                    paymentMessage.textContent = 'Sua sessão expirou ou o token é inválido. Redirecionando para o login...';
+                                    paymentMessage.classList.add('error');
+                                    localStorage.removeItem('authToken');
+                                    setTimeout(() => window.location.href = '/login.html', 2000);
+                                }
+                                throw new Error('Produto não encontrado no servidor ou acesso negado.');
+                            }
+                            return response.json();
+                        })
+                        .then(product => {
+                            selectedProduct = product;
+                            console.log('Produto selecionado após fetch:', selectedProduct); // Debug
+                            paymentModal.style.display = 'flex';
+                            paymentMessage.textContent = '';
+                            paymentForm.reset();
+                        })
+                        .catch(error => {
+                            console.error('Erro ao obter detalhes do produto para compra:', error);
+                            paymentMessage.textContent = `Erro ao carregar detalhes do produto: ${error.message}`;
+                            paymentMessage.classList.add('error');
+                        });
+                }
+            });
+
+            // Fecha o modal quando o botão de fechar (X) é clicado
+            closeButton.addEventListener('click', () => {
+                paymentModal.style.display = 'none';
+            });
+
+            // Fecha o modal se o usuário clicar fora do conteúdo do modal
+            window.addEventListener('click', (event) => {
+                if (event.target === paymentModal) {
+                    paymentModal.style.display = 'none';
+                }
+            });
+
+            // Lógica de simulação de pagamento e envio do TOKEN para o backend
+            paymentForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                paymentMessage.textContent = 'Processando pagamento...';
+                paymentMessage.className = 'payment-message';
+
+                const cardNumber = document.getElementById('card-number').value;
+                const cardName = document.getElementById('card-name').value;
+                const expiryDate = document.getElementById('expiry-date').value;
+                const cvv = document.getElementById('cvv').value;
+
+                const simulatedPaymentToken = `tok_${Date.now()}_${Math.random().toString(36).substr(2, 10)}`;
+
+                // Validação básica (apenas para demonstração)
+                if (!cardNumber || !cardName || !expiryDate || !cvv) {
+                    paymentMessage.textContent = 'Preencha todos os dados do cartão.';
+                    paymentMessage.classList.add('error');
+                    return;
+                }
+                
+                // --- VERIFICAÇÃO CRÍTICA: Garante que selectedProduct e seu ID/preço não são nulos ---
+                console.log('Verificando selectedProduct antes de enviar pagamento:', selectedProduct); // Debug
+                if (!selectedProduct || !selectedProduct.id || !selectedProduct.price) {
+                    paymentMessage.textContent = 'Erro: Produto selecionado inválido. Tente novamente.';
+                    paymentMessage.classList.add('error');
+                    console.error('selectedProduct é nulo ou incompleto na submissão do formulário:', selectedProduct);
+                    return;
+                }
+
+                try {
+                    // --- PASSO 1: SIMULAR ENVIO PARA GATEWAY DE PAGAMENTO (Frontend) ---
+                    paymentMessage.textContent = 'Enviando dados para o gateway...';
+                    await new Promise(resolve => setTimeout(resolve, 1500)); // Simula atraso
+
+                    // FORÇADO: A simulação do gateway SEMPRE será bem-sucedida para teste
+                    const isGatewaySuccess = true; 
+
+                    if (!isGatewaySuccess) { 
+                        paymentMessage.textContent = 'Falha na comunicação com o gateway de pagamento. Tente novamente.';
+                        paymentMessage.classList.add('error');
+                        return;
+                    }
+
+                    // --- PASSO 2: ENVIAR O TOKEN E OS DADOS MOCK PARA O SEU BACKEND ---
+                    paymentMessage.textContent = 'Confirmando pagamento com o servidor...';
+                    const token = localStorage.getItem('authToken'); // Seu token de autenticação do usuário
+                    
+                    // --- NOVA VERIFICAÇÃO: Garante que o token existe antes de enviar ---
+                    if (!token) {
+                        paymentMessage.textContent = 'Erro: Você não está logado. Faça login para comprar.';
+                        paymentMessage.classList.add('error');
+                        setTimeout(() => window.location.href = '/login.html', 2000);
+                        return;
+                    }
+
+                    const payload = {
+                        productId: selectedProduct.id, // ID do produto
+                        amount: selectedProduct.price, // Valor do produto
+                        paymentToken: simulatedPaymentToken, // Token simulado do gateway
+                        cardNumber: cardNumber, // NOVO: Envia o número do cartão mock
+                        expiryDate: expiryDate, // NOVO: Envia a validade mock
+                        cvv: cvv             // NOVO: Envia o CVV mock
+                    };
+                    console.log('Dados enviados para /process-payment no backend:', payload);
+
+                    const response = await fetch(`${API_URL}/process-payment`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}` // Envia o token de autenticação do usuário
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await response.json();
+                    console.log('Resposta completa do backend para /process-payment:', response.status, data);
+
+                    if (response.ok) {
+                        const finalPrice = parseFloat(selectedProduct.price).toFixed(2).replace('.', ',');
+                        paymentMessage.textContent = `Pagamento de R$ ${finalPrice} para ${selectedProduct.name} aprovado!`;
+                        paymentMessage.classList.add('success');
+                        setTimeout(() => {
+                            paymentModal.style.display = 'none';
+                            paymentForm.reset();
+                            // Opcional: Recarregar produtos ou atualizar UI se necessário
+                            fetchAndDisplayProducts(); 
+                        }, 3000);
+                    } else {
+                        paymentMessage.textContent = `Erro no pagamento: ${data.error || 'Falha na confirmação.'}`;
+                        paymentMessage.classList.add('error');
+                    }
+                } catch (error) {
+                    console.error('Erro geral no processo de pagamento (catch):', error);
+                    paymentMessage.textContent = 'Ocorreu um erro inesperado ao processar o pagamento.';
+                    paymentMessage.classList.add('error');
+                }
+            });
+
+            // Inicia a verificação de login e carregamento de produtos
+            if (checkLoginStatus()) {
+                fetchAndDisplayProducts();
+            }
+        });
+    </script>
+</body>
+</html>

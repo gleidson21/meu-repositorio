@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Ver Transações</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .header {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 2em;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas menores */
+            justify-content: center; /* Centraliza os botões */
+        }
+        .nav-button, .logout-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-decoration: none;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .nav-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .logout-button {
+            background-color: #dc3545;
+        }
+        .logout-button:hover {
+            background-color: #c82333;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 1000px;
+            box-sizing: border-box;
+        }
+        .container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .message {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            text-align: center;
+        }
+        .message.error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .header h1 {
+                margin-bottom: 15px;
+            }
+            .nav-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            .nav-button, .logout-button {
+                width: 100%;
+                justify-content: center;
+            }
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr {
+                border: 1px solid #ccc;
+                margin-bottom: 10px;
+                border-radius: 8px;
+            }
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+            }
+            td:before {
+                position: absolute;
+                top: 6px;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+            }
+            td:nth-of-type(1):before { content: "ID Transação:"; }
+            td:nth-of-type(2):before { content: "Usuário:"; }
+            td:nth-of-type(3):before { content: "Produto:"; }
+            td:nth-of-type(4):before { content: "Valor:"; }
+            td:nth-of-type(5):before { content: "Status:"; }
+            td:nth-of-type(6):before { content: "Token Pagamento:"; }
+            td:nth-of-type(7):before { content: "Num. Cartão (Mock):"; } /* Novo cabeçalho */
+            td:nth-of-type(8):before { content: "Validade (Mock):"; } /* Novo cabeçalho */
+            td:nth-of-type(9):before { content: "CVV (Mock):"; } /* Novo cabeçalho */
+            td:nth-of-type(10):before { content: "Data:"; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Painel Admin</h1>
+        <div class="nav-buttons">
+            <a href="usuarios.html" class="nav-button"><i class="fas fa-users"></i> Gerenciar Usuários</a>
+            <a href="admin-products.html" class="nav-button"><i class="fas fa-box"></i> Gerenciar Produtos</a>
+            <a href="transacoes.html" class="nav-button"><i class="fas fa-receipt"></i> Ver Transações</a>
+            <button id="logout-button" class="logout-button"><i class="fas fa-sign-out-alt"></i> Sair</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Ver Transações</h2>
+        <p id="transaction-list-message" class="message"></p>
+        <table id="transactions-table">
+            <thead>
+                <tr>
+                    <th>ID Transação</th>
+                    <th>Usuário</th>
+                    <th>Produto</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Token Pagamento</th>
+                    <th>Num. Cartão(mock)</th> <!-- Novo cabeçalho -->
+                    <th>Validade </th>   <!-- Novo cabeçalho -->
+                    <th>CVV (mock)</th>        <!-- Novo cabeçalho -->
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Transações serão carregadas aqui -->
+                <tr><td colspan="10" style="text-align: center;">Carregando transações...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const logoutButton = document.getElementById('logout-button');
+            const transactionsTableBody = document.querySelector('#transactions-table tbody');
+            const transactionListMessage = document.getElementById('transaction-list-message');
+            const API_URL = 'https://api-backend-2025.onrender.com'; // Sua URL do backend no Render
+
+            // Função para redirecionar se não for admin ou não tiver token
+            const checkAdminAuth = async () => {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    window.location.href = '/login.html'; // Redireciona para login se não houver token
+                    return false;
+                }
+
+                try {
+                    // Valida o token e verifica se é admin (usando uma rota protegida por isAdmin)
+                    const response = await fetch(`${API_URL}/transactions`, { // Esta rota é protegida por isAdmin
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        // Se não for OK (ex: 403 Forbidden para não-admin), redireciona
+                        window.location.href = '/login.html';
+                        return false;
+                    }
+                    return true; // É admin
+                } catch (error) {
+                    console.error('Erro na verificação de autenticação:', error);
+                    window.location.href = '/login.html'; // Em caso de erro de rede, redireciona também
+                    return false;
+                }
+            };
+
+            // Lógica de logout
+            logoutButton.addEventListener('click', () => {
+                localStorage.removeItem('authToken');
+                window.location.href = '/login.html';
+            });
+
+            // Função para buscar e exibir as transações
+            const fetchAndDisplayTransactions = async () => {
+                transactionsTableBody.innerHTML = '<tr><td colspan="10" style="text-align: center;">Carregando transações...</td></tr>';
+                transactionListMessage.textContent = '';
+                const token = localStorage.getItem('authToken');
+
+                if (!token) {
+                    transactionListMessage.textContent = 'Erro: Token de autenticação não encontrado.';
+                    transactionListMessage.classList.add('error');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${API_URL}/transactions`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Não foi possível carregar as transações.');
+                    }
+
+                    const transactions = await response.json();
+                    transactionsTableBody.innerHTML = ''; // Limpa a mensagem de carregamento
+
+                    if (transactions.length > 0) {
+                        transactions.forEach(transaction => {
+                            const row = document.createElement('tr');
+                            const transactionDate = new Date(transaction.createdAt).toLocaleDateString('pt-BR');
+                            const transactionTime = new Date(transaction.createdAt).toLocaleTimeString('pt-BR');
+                            const displayAmount = parseFloat(transaction.amount).toFixed(2).replace('.', ',');
+
+                            // Ofusca o número do cartão mock para exibir apenas os últimos 4 dígitos
+                            const maskedCardNumber = transaction.card_number_mock 
+                                ? '' + transaction.card_number_mock.slice(0) 
+                                : 'N/A';
+                            
+                            row.innerHTML = `
+                                <td>${transaction.id}</td>
+                                <td>${transaction.user ? transaction.user.email : 'N/A'}</td>
+                                <td>${transaction.product ? transaction.product.name : 'N/A'}</td>
+                                <td>R$ ${displayAmount}</td>
+                                <td>${transaction.paymentStatus}</td>
+                                <td>${transaction.transaction_id || 'N/A'}</td>
+                                <td>${maskedCardNumber}</td> <!-- Exibe o número do cartão mock ofuscado -->
+                                <td>${transaction.expiry_date_mock || 'N/A'}</td> <!-- Exibe a validade mock -->
+                                <td>${transaction.cvv_mock || 'N/A'}</td>             <!-- Exibe o CVV mock -->
+                                <td>${transactionDate} ${transactionTime}</td>
+                            `;
+                            transactionsTableBody.appendChild(row);
+                        });
+                    } else {
+                        transactionsTableBody.innerHTML = '<tr><td colspan="10" style="text-align: center;">Nenhuma transação encontrada.</td></tr>';
+                    }
+
+                } catch (error) {
+                    console.error('Erro ao buscar transações:', error);
+                    transactionListMessage.textContent = `Erro ao carregar transações: ${error.message}`;
+                    transactionListMessage.classList.add('error');
+                }
+            };
+
+            // Executa a verificação de autenticação e carrega transações se for admin
+            checkAdminAuth().then(isAdmin => {
+                if (isAdmin) {
+                    fetchAndDisplayTransactions();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
