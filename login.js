@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
+         console.log('Tentativa de login iniciada...');
+        console.log('Email:', email);
 
         try {
             const response = await fetch(`${API_URL}/login`, {
