@@ -64,7 +64,7 @@ const deleteUser = async (userId) => {
     const token = localStorage.getItem('authToken');
     if (!token) {
         alert('Você precisa estar logado para deletar um usuário.');
-        window.location.href = 'login.html';
+        window.location.href = '/meu-repositorio/login.html';
         return;
     }
 
