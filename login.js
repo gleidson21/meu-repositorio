@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 1000);
                 } else {
                     setTimeout(() => {
-                        window.location.href = '/loja.html'; // Para usuários comuns
+                        window.location.href = '/meu-repositorio/loja.html'; // Para usuários comuns
                     }, 1000);
                 }
                 // --- FIM DA NOVA LÓGICA ---
