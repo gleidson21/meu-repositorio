@@ -1,159 +1,82 @@
-/* Importa uma fonte limpa e moderna */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
-/* Estilização geral */
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    font-family: sans-serif;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    padding-top: 25px; /* Ajuste para mobile */
+    min-height: 100vh;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
 }
 
 h1 {
-    color: #1a73e8;
-    text-align: center;
-    font-size: 1.8rem; /* Tamanho ajustado para mobile */
-}
-
-/* Estilização dos contêineres principais */
-form, ul {
-    background-color: #fff;
-    padding: 20px; /* Ajuste para mobile */
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 95%; /* Ajuste para ocupar a maior parte da tela */
-    max-width: 400px;
+    color: #007bff;
     margin-bottom: 20px;
 }
 
-/* Estilização de formulários */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
 label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 700;
+    font-weight: bold;
 }
 
 input {
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #007bff;
 }
 
 button {
     width: 100%;
     padding: 12px;
-    border: none;
-    background-color: #1a73e8;
+    background-color: #007bff;
     color: #fff;
+    border: none;
     border-radius: 4px;
-    font-size: 1rem; /* Ajuste para mobile */
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #0d47a1;
+    background-color: #0056b3;
 }
 
-/* Estilização da lista de usuários */
-#users-list {
-    list-style: none;
-    padding: 0;
+.message {
+    margin-top: 20px;
+    font-weight: bold;
 }
 
-#users-list li {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-#users-list li:last-child {
-    border-bottom: none;
-}
-
-/* Estilização de mensagens de erro e sucesso */
-#register-message, #login-message {
-    text-align: center;
-    margin-top: 10px;
-    font-weight: 700;
-}
-
-/* Estilização de links */
 a {
-    color: #1a73e8;
+    color: #007bff;
     text-decoration: none;
-    transition: color 0.3s ease;
+    margin-top: 20px;
+    display: inline-block;
 }
 
 a:hover {
-    color: #0d47a1;
     text-decoration: underline;
-}
-
-#logout-button {
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-/* Estilos para os botões de ação na lista de usuários */
-#users-list li .actions button {
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-    width: 100%; /* Ajuste para mobile */
-    margin-top: 10px;
-}
-
-#users-list li .actions button:hover {
-    background-color: #d93636;
-}
-
-#users-list li .actions button i {
-    margin-right: 5px;
-}
-
-/* Estilos para o bloco de informações do usuário */
-.user-info {
-    display: flex;
-    align-items: flex-start;
-    width: 100%;
-}
-
-.user-info .fas.fa-user {
-    margin-right: 15px;
-    font-size: 1.2rem;
-    color: #1a73e8;
-    margin-top: 5px;
-}
-
-/* REGRAS PARA O LAYOUT VERTICAL */
-.user-details {
-    display: flex;
-    flex-direction: column;
-    word-break: break-all;
-    width: 100%;
-}
-
-.user-details p {
-    margin: 2px 0;
-    font-size: 0.9rem; /* Tamanho da fonte ajustado */
-}
-
-.user-details p strong {
-    color: #1a73e8;
-    font-weight: 700;
 }
