@@ -29,11 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Verifica a permissão do usuário e redireciona
                 if (data.user && data.user.role === 'admin') {
                     setTimeout(() => {
-                        window.location.href = 'usuarios.html'; // Para administradores
+                        window.location.href = '/usuarios.html'; // Para administradores
                     }, 1000);
                 } else {
                     setTimeout(() => {
-                        window.location.href = 'loja.html'; // Para usuários comuns
+                        window.location.href = '/loja.html'; // Para usuários comuns
                     }, 1000);
                 }
                 // --- FIM DA NOVA LÓGICA ---
