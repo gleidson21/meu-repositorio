@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
-         console.log('Tentativa de login iniciada...');
+        console.log('Tentativa de login iniciada...');
         console.log('Email:', email);
 
         try {
@@ -27,19 +27,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 messageElement.textContent = 'Login bem-sucedido!';
                 messageElement.style.color = '#5cb85c';
                 
-                // --- NOVA LÓGICA DE REDIRECIONAMENTO ---
-                // Verifica a permissão do usuário e redireciona
+                // --- A CORREÇÃO FINAL ESTÁ AQUI! ---
+                // Removendo o setTimeout
                 if (data.user && data.user.role === 'admin') {
-                    setTimeout(() => {
-                        window.location.href = '/meu-repositorio/usuarios.html'; // Para administradores
-                    }, 1000);
+                    window.location.href = '/meu-repositorio/usuarios.html';
                 } else {
-                    setTimeout(() => {
-                        window.location.href = '/meu-repositorio/loja.html'; // Para usuários comuns
-                    }, 1000);
+                    window.location.href = '/meu-repositorio/loja.html';
                 }
-                // --- FIM DA NOVA LÓGICA ---
-
             } else {
                 messageElement.textContent = `Erro: ${data.error || 'Falha no login.'}`;
                 messageElement.style.color = '#d9534f';
