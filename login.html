@@ -1,139 +1,42 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
-    <base href="/meu-repositorio"> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .login-container {
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            width: 100%;
-            max-width: 450px;
-            text-align: center;
-            box-sizing: border-box;
-        }
-        .login-container h1 {
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 2.2em;
-        }
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: bold;
-        }
-        .form-group input {
-            width: calc(100% - 22px); /* Adjust for padding and border */
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
-            box-sizing: border-box;
-        }
-        .login-button {
-            background-color: #007bff;
-            color: white;
-            padding: 15px 25px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1em;
-            width: 100%;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
-        .login-button:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
-        .register-link {
-            display: block;
-            margin-top: 25px;
-            color: #28a745;
-            text-decoration: none;
-            font-size: 1em;
-            transition: color 0.3s ease;
-        }
-        .register-link:hover {
-            color: #218838;
-            text-decoration: underline;
-        }
-        .message {
-            margin-top: 20px;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 1em;
-            text-align: center;
-        }
-        .message.error {
-            color: #721c24;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-        }
-        .message.success {
-            color: #155724;
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-        }
-    </style>
+    <title>Login - Loja Online</title>
+    <base href="/meu-repositorio/">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="login-container">
-        <h1>login</h1>
+    <div class="container">
+        <h1>Entrar na Conta</h1>
         <form id="login-form">
             <div class="form-group">
-                <label for="email"><i class="fas fa-envelope"></i> Email:</label>
-                <input type="email" id="email" required>
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" required>
             </div>
             <div class="form-group">
-                <label for="password"><i class="fas fa-lock"></i> Senha:</label>
-                <input type="password" id="password" required>
+                <label for="login-password">Senha</label>
+                <input type="password" id="login-password" required>
             </div>
-            <button type="submit" class="login-button">Entrar</button>
+            <button type="submit">Entrar</button>
         </form>
-        <div id="message" class="message"></div>
-        <a href="index.html" class="register-link">Não tem uma conta? Registe-se aqui.</a>
+        <p id="login-message" class="message"></p>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const loginForm = document.getElementById('login-form');
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            const messageDiv = document.getElementById('message');
+            // URL da sua API no Render.com
+            const API_URL = 'https://api-backend-2025.onrender.com';
+            const form = document.getElementById('login-form');
+            const messageElement = document.getElementById('login-message');
 
-            const API_URL = 'https://api-backend-2025.onrender.com'; // Sua URL do backend no Render
-
-            loginForm.addEventListener('submit', async (event) => {
+            form.addEventListener('submit', async (event) => {
                 event.preventDefault();
-                messageDiv.textContent = 'A iniciar sessão...';
-                messageDiv.className = 'message';
 
-                const email = emailInput.value;
-                const password = passwordInput.value;
-
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
                 try {
                     const response = await fetch(`${API_URL}/login`, {
                         method: 'POST',
@@ -144,33 +47,26 @@
                     });
 
                     const data = await response.json();
-
+                    
                     if (response.ok) {
-                        localStorage.setItem('authToken', data.token); // Armazena o token JWT
-                        messageDiv.textContent = data.message || 'Login bem-sucedido!';
-                        messageDiv.classList.add('success');
-                        loginForm.reset();
-
-                        // Redireciona com base na função do usuário
+                        // Salva o token no armazenamento local
+                        localStorage.setItem('authToken', data.token);
+                        messageElement.textContent = 'Login bem-sucedido!';
+                        messageElement.style.color = '#5cb85c';
+                        
+                        // Redireciona o usuário imediatamente
                         if (data.user && data.user.role === 'admin') {
-                            console.log('Login de administrador. Redirecionando para usuarios.html');
-                            setTimeout(() => {
-                                window.location.href = '/usuarios.html'; // Redireciona para a página de admin
-                            }, 1000);
+                            window.location.href = 'usuarios.html';
                         } else {
-                            console.log('Login de usuário normal. Redirecionando para loja.html');
-                            setTimeout(() => {
-                                window.location.href = '/loja.html'; // Redireciona para a página da loja
-                            }, 1000);
+                            window.location.href = 'loja.html';
                         }
                     } else {
-                        messageDiv.textContent = data.error || 'Credenciais inválidas.';
-                        messageDiv.classList.add('error');
+                        messageElement.textContent = `Erro: ${data.error || 'Falha no login.'}`;
+                        messageElement.style.color = '#d9534f';
                     }
                 } catch (error) {
-                    console.error('Erro no login:', error);
-                    messageDiv.textContent = 'Ocorreu um erro de rede. Tente novamente.';
-                    messageDiv.classList.add('error');
+                    messageElement.textContent = 'Erro de conexão com o servidor.';
+                    messageElement.style.color = '#d9534f';
                 }
             });
         });
