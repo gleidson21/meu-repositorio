@@ -51,7 +51,7 @@ const fetchUsers = async () => {
             localStorage.removeItem('authToken');
             usersList.innerHTML = '<li>Sessão expirada. Faça o login novamente.</li>';
             setTimeout(() => {
-                window.location.href = 'login.html';
+                window.location.href = '/meu-repositorio/login.html';
             }, 2000);
         }
     } catch (error) {
