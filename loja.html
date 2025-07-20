@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minha Loja Virtual</title>
-    <base href="/meu-repositorio/"> 
+    <base href="/meu-repositorio/">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -18,6 +19,7 @@
             padding: 20px;
             box-sizing: border-box;
         }
+
         .header {
             width: 100%;
             max-width: 1200px;
@@ -28,10 +30,12 @@
             margin-bottom: 30px;
             border-bottom: 1px solid #e0e0e0;
         }
+
         .header h1 {
             color: #333;
             margin: 0;
         }
+
         .logout-button {
             background-color: #dc3545;
             color: white;
@@ -43,10 +47,12 @@
             transition: background-color 0.3s ease, transform 0.1s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .logout-button:hover {
             background-color: #c82333;
             transform: translateY(-2px);
         }
+
         .products-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -55,6 +61,7 @@
             max-width: 1200px;
             padding: 20px 0;
         }
+
         .product-card {
             background-color: #fff;
             border-radius: 12px;
@@ -66,10 +73,12 @@
             text-align: center;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
+
         .product-card img {
             max-width: 100%;
             height: 200px;
@@ -78,23 +87,27 @@
             margin-bottom: 15px;
             background-color: #e9ecef;
         }
+
         .product-card h3 {
             color: #333;
             margin: 10px 0;
             font-size: 1.4em;
         }
+
         .product-card p {
             color: #666;
             font-size: 0.95em;
             margin-bottom: 15px;
             flex-grow: 1;
         }
+
         .product-card .price {
             font-size: 1.6em;
             color: #007bff;
             font-weight: bold;
             margin-bottom: 20px;
         }
+
         .buy-button {
             background-color: #007bff;
             color: white;
@@ -107,10 +120,12 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-top: 10px;
         }
+
         .buy-button:hover {
             background-color: #0056b3;
             transform: translateY(-2px);
         }
+
         .message {
             margin-top: 20px;
             padding: 10px 20px;
@@ -120,6 +135,7 @@
             background-color: #e9ecef;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
+
         .modal {
             display: none;
             position: fixed;
@@ -133,6 +149,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .modal-content {
             background-color: #fefefe;
             margin: auto;
@@ -144,10 +161,19 @@
             position: relative;
             animation: fadeIn 0.3s ease-out;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .close-button {
             color: #aaa;
             position: absolute;
@@ -158,26 +184,31 @@
             cursor: pointer;
             transition: color 0.3s ease;
         }
+
         .close-button:hover,
         .close-button:focus {
             color: #333;
             text-decoration: none;
         }
+
         .modal-content h2 {
             text-align: center;
             color: #333;
             margin-bottom: 25px;
             font-size: 1.8em;
         }
+
         .form-group {
             margin-bottom: 20px;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
             color: #555;
             font-weight: bold;
         }
+
         .form-group input {
             width: calc(100% - 20px);
             padding: 12px;
@@ -186,13 +217,16 @@
             font-size: 1em;
             box-sizing: border-box;
         }
+
         .form-row {
             display: flex;
             gap: 15px;
         }
+
         .form-row .form-group {
             flex: 1;
         }
+
         .pay-button {
             background-color: #28a745;
             color: white;
@@ -205,32 +239,40 @@
             transition: background-color 0.3s ease, transform 0.1s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .pay-button:hover {
             background-color: #218838;
             transform: translateY(-2px);
         }
+
         .payment-message {
             margin-top: 20px;
             text-align: center;
             font-weight: bold;
         }
+
         .payment-message.success {
             color: #28a745;
         }
+
         .payment-message.error {
             color: #dc3545;
         }
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
                 text-align: center;
             }
+
             .header h1 {
                 margin-bottom: 15px;
             }
+
             .products-container {
                 grid-template-columns: 1fr;
             }
+
             .form-row {
                 flex-direction: column;
                 gap: 0;
@@ -238,6 +280,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <h1>Bem-vindo à Loja Virtual!</h1>
@@ -258,7 +301,8 @@
             <form id="paymentForm">
                 <div class="form-group">
                     <label for="card-number">Número do Cartão (Simulado)</label>
-                    <input type="text" id="card-number" placeholder="XXXX XXXX XXXX XXXX" required pattern="[0-9]{13,16}" title="Apenas números, 13 a 16 dígitos">
+                    <input type="text" id="card-number" placeholder="XXXX XXXX XXXX XXXX" required
+                        pattern="[0-9]{13,16}" title="Apenas números, 13 a 16 dígitos">
                 </div>
                 <div class="form-group">
                     <label for="card-name">Nome no Cartão (Simulado)</label>
@@ -267,11 +311,13 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="expiry-date">Validade (MM/AA - Simulado)</label>
-                        <input type="text" id="expiry-date" placeholder="MM/AA" required pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Formato MM/AA">
+                        <input type="text" id="expiry-date" placeholder="MM/AA" required
+                            pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="Formato MM/AA">
                     </div>
                     <div class="form-group">
                         <label for="cvv">CVV (Simulado)</label>
-                        <input type="text" id="cvv" placeholder="XXX" required pattern="[0-9]{3,4}" title="3 ou 4 dígitos">
+                        <input type="text" id="cvv" placeholder="XXX" required pattern="[0-9]{3,4}"
+                            title="3 ou 4 dígitos">
                     </div>
                 </div>
                 <button type="submit" class="pay-button">Pagar</button>
@@ -280,6 +326,13 @@
         </div>
     </div>
     <script>
+        const token = localStorage.getItem('token');
+
+// Se o token não existir, o usuário não está logado, então o redireciona.
+if (!token) {
+    alert('Você precisa estar logado para acessar a loja.');
+    window.location.href = './login.html';
+}
         document.addEventListener('DOMContentLoaded', () => {
             const logoutButton = document.getElementById('logout-button');
             const productsContainer = document.getElementById('products-container');
@@ -336,7 +389,7 @@
                         }
                         return;
                     }
-                    
+
                     const products = await response.json();
                     productsContainer.innerHTML = '';
 
@@ -433,7 +486,7 @@
                     paymentMessage.classList.add('error');
                     return;
                 }
-                
+
                 if (!selectedProduct || !selectedProduct.id || !selectedProduct.price) {
                     paymentMessage.textContent = 'Erro: Produto selecionado inválido. Tente novamente.';
                     paymentMessage.classList.add('error');
@@ -441,8 +494,8 @@
                 }
 
                 try {
-                    const isGatewaySuccess = true; 
-                    if (!isGatewaySuccess) { 
+                    const isGatewaySuccess = true;
+                    if (!isGatewaySuccess) {
                         paymentMessage.textContent = 'Falha na comunicação com o gateway de pagamento. Tente novamente.';
                         paymentMessage.classList.add('error');
                         return;
@@ -484,7 +537,7 @@
                         setTimeout(() => {
                             paymentModal.style.display = 'none';
                             paymentForm.reset();
-                            fetchAndDisplayProducts(); 
+                            fetchAndDisplayProducts();
                         }, 3000);
                     } else {
                         paymentMessage.textContent = `Erro no pagamento: ${data.error || 'Falha na confirmação.'}`;
@@ -501,5 +554,7 @@
             }
         });
     </script>
+      
 </body>
+
 </html>
