@@ -103,7 +103,7 @@ usersList.addEventListener('click', (event) => {
 logoutButton.addEventListener('click', (event) => {
     event.preventDefault();
     localStorage.removeItem('authToken');
-    window.location.href = 'login.html';
+    window.location.href = '/meu-repositorio/loja.html';
 });
 
 // Carrega a lista de usuários quando a página é carregada
