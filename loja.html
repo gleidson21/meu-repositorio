@@ -326,13 +326,6 @@
         </div>
     </div>
     <script>
-        const token = localStorage.getItem('token');
-
-// Se o token não existir, o usuário não está logado, então o redireciona.
-if (!token) {
-    alert('Você precisa estar logado para acessar a loja.');
-    window.location.href = './login.html';
-}
         document.addEventListener('DOMContentLoaded', () => {
             const logoutButton = document.getElementById('logout-button');
             const productsContainer = document.getElementById('products-container');
