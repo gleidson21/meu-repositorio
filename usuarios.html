@@ -267,14 +267,6 @@
     </div>
 
     <script>
-        const token = localStorage.getItem('token');
-        const userRole = localStorage.getItem('userRole');
-
-        // Se o token não existir ou a função não for de 'admin', redireciona para a página de login
-        if (!token || userRole !== 'admin') {
-            alert('Você não tem permissão para acessar esta página. Por favor, faça o login.');
-            window.location.href = './login.html';
-        }
         document.addEventListener('DOMContentLoaded', () => {
             const logoutButton = document.getElementById('logout-button');
             const usersTableBody = document.querySelector('#users-table tbody');
