@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // *** ATENÇÃO: COLOQUE A URL DA SUA API AQUI! ***
-    const API_URL = 'https://api-backend-2025.onrender.com/api'; // <--- ALTERE ESTA URL!
+    const API_URL = 'https://api-backend-2025.onrender.com'; // <--- ALTERE ESTA URL!
 
     // --- Seletores de Elementos ---
     const logoutButton = document.getElementById('logout-button');
