@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Minha Loja Virtual</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css"> </head>
+<body>
+    <div class="header">
+        <h1>Painel de Administração</h1>
+        <button id="admin-logout-button" class="logout-button">Sair do Admin</button>
+    </div>
+
+    <div class="admin-container-wrapper">
+        <h2>Gerenciar Produtos</h2>
+        <form id="addProductForm" class="admin-form">
+            <h3>Adicionar Novo Produto</h3>
+            <input type="text" id="productName" placeholder="Nome do Produto" required>
+            <textarea id="productDescription" placeholder="Descrição do Produto" rows="3" required></textarea>
+            <input type="number" id="productPrice" placeholder="Preço" step="0.01" required>
+            <input type="url" id="productImage" placeholder="URL da Imagem (opcional)">
+            <button type="submit" class="form-button">Adicionar Produto</button>
+            <p id="addProductMessage" class="message"></p>
+        </form>
+
+        <div class="product-list-admin">
+            <h3>Produtos Atuais</h3>
+            <p id="loadingProductsAdmin" class="message info">Carregando produtos...</p>
+            <table class="admin-table" id="adminProductTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Preço</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="adminProductList">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

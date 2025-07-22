@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Minha Loja Virtual</title>
+    <link rel="stylesheet" href="/css/style.css"> </head>
+<body>
+    <div class="auth-container">
+        <h2>Criar Nova Conta</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="fullName">Nome Completo:</label>
+                <input type="text" id="fullName" name="fullName" required>
+            </div>
+            <div class="form-group">
+                <label for="newEmail">Email:</label>
+                <input type="email" id="newEmail" name="newEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="newPassword">Senha:</label>
+                <input type="password" id="newPassword" name="newPassword" required>
+            </div>
+            <button type="submit" class="form-button register">Cadastrar</button>
+            <p id="registerMessage" class="message"></p>
+        </form>
+        <div class="links">
+            Já tem uma conta? <a href="login.html">Faça login aqui</a>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,7 +1,7 @@
-/* css/style.css */
+/* minha-loja-frontend/css/style.css */
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', sans-serif; /* Usar Inter ou outra fonte preferida */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,6 +10,7 @@ body {
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
+    color: #333;
 }
 
 .header {
@@ -31,10 +32,10 @@ body {
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 20px; /* Espaçamento entre o ícone do carrinho e o botão de sair */
+    gap: 20px;
 }
 
-.logout-button {
+.logout-button, .admin-button {
     background-color: #dc3545;
     color: white;
     padding: 10px 20px;
@@ -44,13 +45,109 @@ body {
     font-size: 1em;
     transition: background-color 0.3s ease, transform 0.1s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-decoration: none; /* Para o link do admin */
+    display: inline-block; /* Para o link do admin */
+    text-align: center;
 }
 
-.logout-button:hover {
+.logout-button:hover, .admin-button:hover {
     background-color: #c82333;
     transform: translateY(-2px);
 }
 
+/* Containers Centrais para Páginas de Login, Cadastro, Admin */
+.auth-container, .admin-container-wrapper {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 450px; /* Ajuste para formularios menores */
+    text-align: center;
+    margin-top: 50px; /* Espaçamento do topo */
+}
+
+/* Títulos dentro dos containers */
+.auth-container h2, .admin-container-wrapper h2 {
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* Estilos de Formulário Comuns */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: bold;
+}
+.form-group input, .form-group textarea {
+    width: calc(100% - 20px);
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+.form-group textarea {
+    resize: vertical; /* Permite redimensionar verticalmente */
+}
+
+/* Botões de Formulário (Login, Cadastro, Adicionar Produto) */
+.form-button {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2em;
+    width: 100%;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.form-button:hover {
+    background-color: #0056b3;
+}
+.form-button.register {
+    background-color: #28a745; /* Cor verde para cadastro */
+}
+.form-button.register:hover {
+    background-color: #218838;
+}
+
+
+/* Mensagens de Sucesso/Erro */
+.message {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #dc3545; /* Padrão para erro */
+}
+.message.success {
+    color: green;
+}
+.message.info {
+    color: #007bff;
+}
+
+/* Links em Formulários */
+.links {
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+.links a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.links a:hover {
+    text-decoration: underline;
+}
+
+/* --- Estilos da Loja (produtos) --- */
 .products-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -106,7 +203,7 @@ body {
     margin-bottom: 20px;
 }
 
-.add-to-cart-button { /* Botão de adicionar ao carrinho */
+.add-to-cart-button {
     background-color: #007bff;
     color: white;
     padding: 12px 25px;
@@ -122,16 +219,6 @@ body {
 .add-to-cart-button:hover {
     background-color: #0056b3;
     transform: translateY(-2px);
-}
-
-.message {
-    margin-top: 20px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 1.1em;
-    color: #333;
-    background-color: #e9ecef;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Base para Modais (aplicado a ambos, carrinho e pagamento) */
@@ -153,7 +240,6 @@ body {
 .cart-modal {
     z-index: 1001; /* Carrinho sempre acima do pagamento se ambos estiverem abertos */
 }
-
 
 .modal-content {
     background-color: #fefefe;
@@ -200,26 +286,6 @@ body {
     color: #333;
     margin-bottom: 25px;
     font-size: 1.8em;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #555;
-    font-weight: bold;
-}
-
-.form-group input {
-    width: calc(100% - 20px);
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1em;
-    box-sizing: border-box;
 }
 
 .form-row {
@@ -405,29 +471,73 @@ body {
     margin-top: 20px;
 }
 
+/* --- Estilos da Área Admin --- */
+.admin-container-wrapper {
+    max-width: 1000px; /* Mais largo para tabelas */
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 40px;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+.admin-table th, .admin-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+.admin-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #333;
+}
+.admin-table td button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.85em;
+}
+.admin-table td button:hover {
+    background-color: #c82333;
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
     .header {
         flex-direction: column;
         text-align: center;
     }
-
     .header h1 {
         margin-bottom: 15px;
     }
-
     .header-actions {
         flex-direction: column;
         gap: 15px;
     }
-
     .products-container {
         grid-template-columns: 1fr;
     }
-
     .form-row {
         flex-direction: column;
         gap: 0;
+    }
+    .auth-container, .admin-container-wrapper {
+        padding: 20px;
     }
 }
 

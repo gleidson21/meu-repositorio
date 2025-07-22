@@ -1,7 +1,10 @@
-// js/script.js
+// minha-loja-frontend/js/script.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Seletores de Elementos (Organizados) ---
+    // *** ATENÇÃO: COLOQUE A URL DA SUA API AQUI! ***
+    const API_URL = 'https://api-backend-2025.onrender.com'; // <--- ALTERE ESTA URL!
+
+    // --- Seletores de Elementos ---
     const logoutButton = document.getElementById('logout-button');
     const productsContainer = document.getElementById('products-container');
 
@@ -22,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Variáveis de Estado ---
     let cart = []; // Array para armazenar os itens do carrinho
-    const API_URL = 'https://api-backend-2025.onrender.com';
 
     // --- Funções de Utilitário ---
     const checkLoginStatus = () => {
@@ -120,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Funções de Busca e Exibição de Produtos ---
     const fetchAndDisplayProducts = async () => {
-        productsContainer.innerHTML = '<p class="message">Carregando produtos do servidor...</p>';
+        productsContainer.innerHTML = '<p class="message info">Carregando produtos do servidor...</p>';
         const token = localStorage.getItem('authToken');
 
         if (!token) {
@@ -168,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     productsContainer.appendChild(productCard);
                 });
             } else {
-                productsContainer.innerHTML = '<p class="message">Nenhum produto disponível no momento. Adicione produtos no painel de administração.</p>';
+                productsContainer.innerHTML = '<p class="message info">Nenhum produto disponível no momento. Adicione produtos no painel de administração.</p>';
             }
         } catch (error) {
             productsContainer.innerHTML = `<p class="message error">Erro ao carregar produtos: ${error.message}. Verifique a conexão com o backend.</p>`;
@@ -179,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const processPayment = async (event) => {
         event.preventDefault();
         paymentMessage.textContent = 'Processando pagamento...';
-        paymentMessage.className = 'payment-message';
+        paymentMessage.className = 'message info';
 
         const cardNumber = document.getElementById('card-number').value;
         const cardName = document.getElementById('card-name').value;
@@ -189,31 +191,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!cardNumber || !cardName || !expiryDate || !cvv) {
             paymentMessage.textContent = 'Preencha todos os dados do cartão.';
-            paymentMessage.classList.add('error');
+            paymentMessage.className = 'message error';
             return;
         }
 
         if (cart.length === 0) {
             paymentMessage.textContent = 'Erro: Carrinho vazio. Adicione produtos antes de pagar.';
-            paymentMessage.classList.add('error');
+            paymentMessage.className = 'message error';
             return;
         }
 
         try {
-            // Em uma loja robusta real, você enviaria os dados do cartão para um Gateway de Pagamento SEGURO.
-            // A resposta desse gateway seria um token que você enviaria para seu backend.
-            // Aqui estamos simulando um token diretamente.
-            const isGatewaySuccess = true; // Simulação de sucesso do gateway
+            // Simulação de sucesso do gateway. Em uma aplicação real, você integraria com um serviço de pagamento.
+            const isGatewaySuccess = true; 
             if (!isGatewaySuccess) {
                 paymentMessage.textContent = 'Falha na comunicação com o gateway de pagamento. Tente novamente.';
-                paymentMessage.classList.add('error');
+                paymentMessage.className = 'message error';
                 return;
             }
 
             const token = localStorage.getItem('authToken');
             if (!token) {
                 paymentMessage.textContent = 'Erro: Você não está logado. Faça login para comprar.';
-                paymentMessage.classList.add('error');
+                paymentMessage.className = 'message error';
                 window.location.href = 'login.html';
                 return;
             }
@@ -226,8 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 })),
                 paymentToken: simulatedPaymentToken,
                 // Em uma integração real, você não enviaria dados sensíveis do cartão para o backend.
-                // Apenas o token gerado pelo gateway.
-                // Aqui mantemos para demonstrar a simulação completa.
+                // Apenas o token gerado pelo gateway. Aqui mantemos para demonstrar a simulação.
                 cardNumber: cardNumber,
                 expiryDate: expiryDate,
                 cvv: cvv
@@ -247,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 const totalCartPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 paymentMessage.textContent = `Pagamento de R$ ${formatPrice(totalCartPrice)} aprovado!`;
-                paymentMessage.classList.add('success');
+                paymentMessage.className = 'message success';
                 cart = []; // Esvazia o carrinho após o pagamento
                 saveCart(); // Salva o carrinho vazio
                 updateCartDisplay(); // Atualiza o display do carrinho
@@ -259,11 +258,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 3000);
             } else {
                 paymentMessage.textContent = `Erro no pagamento: ${data.error || 'Falha na confirmação.'}`;
-                paymentMessage.classList.add('error');
+                paymentMessage.className = 'message error';
             }
         } catch (error) {
             paymentMessage.textContent = 'Ocorreu um erro inesperado ao processar o pagamento.';
-            paymentMessage.classList.add('error');
+            paymentMessage.className = 'message error';
             console.error('Payment processing error:', error);
         }
     };
@@ -278,15 +277,11 @@ document.addEventListener('DOMContentLoaded', () => {
     productsContainer.addEventListener('click', (event) => {
         const addToCartButton = event.target.closest('.add-to-cart-button');
         if (addToCartButton) {
-            if (!checkLoginStatus()) {
+            if (!checkLoginStatus()) { // Garante que o usuário está logado
                 return;
             }
             const productId = addToCartButton.dataset.productId;
             const token = localStorage.getItem('authToken');
-
-            if (!token) {
-                return;
-            }
 
             fetch(`${API_URL}/products/${productId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -350,16 +345,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const productId = target.dataset.id;
 
         if (target.tagName === 'BUTTON') {
-            if (target.dataset.change) {
+            if (target.dataset.change) { // Botões de + e -
                 updateQuantity(productId, parseInt(target.dataset.change));
-            } else if (target.classList.contains('cart-item-remove')) {
+            } else if (target.classList.contains('cart-item-remove')) { // Botão Remover
                 removeFromCart(productId);
             }
         }
     });
 
     // --- Inicialização da Loja ---
-    if (checkLoginStatus()) {
+    if (checkLoginStatus()) { // Verifica login ao carregar a página da loja
         fetchAndDisplayProducts();
         loadCart(); // Carrega o carrinho ao iniciar
     }
