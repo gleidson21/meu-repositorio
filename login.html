@@ -4,29 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Minha Loja Virtual</title>
-    <!-- Caminho relativo para GitHub Pages -->
+    
     <link rel="stylesheet" href="css/style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="auth-container">
-        <h2>Login</h2>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">Email:</label> <!-- MUDANÇA AQUI: de 'username' para 'email' -->
-                <input type="email" id="email" name="email" required> <!-- MUDANÇA AQUI: de 'username' para 'email' -->
+
+    <main>
+        <div class="auth-container">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="form-button login">Entrar</button>
+                <p id="loginMessage" class="message"></p>
+            </form>
+            <div class="links">
+                Não tem uma conta? <a href="cadastro.html">Cadastre-se aqui</a>
             </div>
-            <div class="form-group">
-                <label for="password">Senha:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="form-button login">Entrar</button>
-            <p id="loginMessage" class="message"></p>
-        </form>
-        <div class="links">
-            Não tem uma conta? <a href="cadastro.html">Cadastre-se aqui</a>
         </div>
-    </div>
-    <!-- O script de autenticação para esta página -->
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Minha Loja Virtual. Todos os direitos reservados.</p>
+    </footer>
+    
     <script src="js/auth.js"></script>
 </body>
 </html>

@@ -5,15 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo - Minha Loja Virtual</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- Essencial para ícones (Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="admin-container">
-        <h2>Painel Administrativo</h2>
-        <div id="admin-content">
-            <h3>Gerenciar Produtos</h3>
-            <div id="product-list"></div>
-            </div>
-    </div>
-    <script src="js/admin.js"></script> 
+
+    <!-- O HEADER DE NAVEGAÇÃO FOI REMOVIDO PARA UM DESIGN MAIS FOCO NO ADMIN -->
+
+    <main>
+        <div class="admin-container">
+            <h2>Painel Administrativo</h2>
+            
+            <!-- Botão de Logout no painel administrativo -->
+            <button id="logout-button" class="admin-logout-button">Sair do Painel</button>
+
+            <!-- Seção para Gerenciar Produtos -->
+            <section class="admin-section">
+                <h3>Gerenciar Produtos</h3>
+                <form id="productForm" class="admin-form">
+                    <input type="hidden" id="productId">
+                    <div class="form-group">
+                        <label for="productName">Nome do Produto:</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDescription">Descrição:</label>
+                        <textarea id="productDescription"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Preço:</label>
+                        <input type="number" id="productPrice" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productImage">URL da Imagem:</label>
+                        <input type="url" id="productImage">
+                    </div>
+                    <button type="submit" id="saveProductButton" class="form-button">Salvar Produto</button>
+                    <button type="button" id="cancelEditButton" class="form-button secondary" style="display:none;">Cancelar Edição</button>
+                    <p id="productMessage" class="message"></p>
+                </form>
+
+                <h4>Lista de Produtos</h4>
+                <div id="productList" class="admin-list">
+                    <p class="message info">Carregando produtos...</p>
+                    <!-- Produtos serão carregados aqui pelo JavaScript -->
+                </div>
+            </section>
+
+            <!-- Seção para Gerenciar Usuários (Apenas se seu backend tiver essa rota e você for admin) -->
+            <section class="admin-section">
+                <h3>Gerenciar Usuários</h3>
+                <div id="userList" class="admin-list">
+                    <p class="message info">Carregando usuários...</p>
+                    <!-- Usuários serão carregados aqui pelo JavaScript -->
+                </div>
+            </section>
+
+            <!-- Seção para Gerenciar Transações (Apenas se seu backend tiver essa rota e você for admin) -->
+            <section class="admin-section">
+                <h3>Gerenciar Transações</h3>
+                <div id="transactionList" class="admin-list">
+                    <p class="message info">Carregando transações...</p>
+                    <!-- Transações serão carregadas aqui pelo JavaScript -->
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Minha Loja Virtual. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Script JavaScript para a lógica do painel administrativo -->
+    <script src="js/admin.js"></script>
 </body>
 </html>

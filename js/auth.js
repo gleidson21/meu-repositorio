@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     loginMessage.textContent = 'Login bem-sucedido!';
                     loginMessage.className = 'message success';
                     // Redireciona para a página principal da loja (ajuste o caminho se necessário)
-                    window.location.href = 'index.html'; 
+                    window.location.href = 'loja.html'; 
                 } else {
                     loginMessage.textContent = data.error || 'Erro ao fazer login. Verifique email e senha.';
                     loginMessage.className = 'message error';

@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loja Online - Minha Loja Virtual</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <header>
-        <h1>Minha Loja Virtual</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Início</a></li>
-                <li><a href="loja.html">Loja</a></li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="cadastro.html">Cadastro</a></li>
-                </ul>
-        </nav>
-    </header>
 
+    <div class="utility-bar">
+        <div id="cart-icon-container">
+            <a href="#" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i> Carrinho (<span id="cart-count">0</span>)
+            </a>
+        </div>
+        <div>
+            <button id="logout-button">Sair</button>
+        </div>
+    </div>
     <main>
-        <h2>Nossos Produtos</h2>
+        <h2>Nossos Produtos</h2> 
         <div id="product-grid" class="product-grid">
             </div>
     </main>
@@ -28,6 +28,49 @@
     <footer>
         <p>&copy; 2025 Minha Loja Virtual. Todos os direitos reservados.</p>
     </footer>
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Seu Carrinho</h2>
+            <div id="empty-cart-message" style="display: none;">
+                <p>Seu carrinho está vazio.</p>
+            </div>
+            <div id="cart-items-list" class="cart-items-list">
+                </div>
+            <p id="cart-total">Total: R$ 0,00</p>
+            <button id="checkout-button">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Informações de Pagamento</h2>
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label for="card-number">Número do Cartão:</label>
+                    <input type="text" id="card-number" required placeholder="**** **** **** ****">
+                </div>
+                <div class="form-group">
+                    <label for="card-name">Nome no Cartão:</label>
+                    <input type="text" id="card-name" required placeholder="Nome Completo">
+                </div>
+                <div class="form-group row">
+                    <div class="col">
+                        <label for="expiry-date">Validade (MM/AA):</label>
+                        <input type="text" id="expiry-date" required placeholder="MM/AA">
+                    </div>
+                    <div class="col">
+                        <label for="cvv">CVV:</label>
+                        <input type="text" id="cvv" required placeholder="123">
+                    </div>
+                </div>
+                <button type="submit">Pagar</button>
+                <p id="payment-message" class="message"></p>
+            </form>
+        </div>
+    </div>
 
     <script src="js/script.js"></script> 
 </body>

@@ -1,39 +1,53 @@
 // minha-loja-frontend/js/script.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    // *** ATENÇÃO: COLOQUE A URL DA SUA API AQUI! ***
-    const API_URL = 'https://api-backend-2025.onrender.com'; // <--- ALTERE ESTA URL!
+    const API_URL = 'https://api-backend-2025.onrender.com';
 
     // --- Seletores de Elementos ---
+    // Sempre verifique se o elemento existe antes de tentar usá-lo ou adicionar listeners
     const logoutButton = document.getElementById('logout-button');
-    const productsContainer = document.getElementById('products-container');
+    const productsContainer = document.getElementById('product-grid'); // ID CORRIGIDO AQUI!
 
-    // Modais
+    // Modais e seus botões (Verificar existência)
     const paymentModal = document.getElementById('paymentModal');
-    const paymentCloseButton = paymentModal.querySelector('.close-button');
-    const paymentForm = document.getElementById('paymentForm');
-    const paymentMessage = document.getElementById('payment-message');
+    let paymentCloseButton = null;
+    let paymentForm = null;
+    let paymentMessage = null;
+    if (paymentModal) { // Só busca os elementos internos se o modal existir
+        paymentCloseButton = paymentModal.querySelector('.close-button');
+        paymentForm = document.getElementById('paymentForm');
+        paymentMessage = document.getElementById('payment-message');
+    }
 
+    // Elementos do Carrinho (Verificar existência)
     const cartIconContainer = document.getElementById('cart-icon-container');
-    const cartCount = document.getElementById('cart-count');
-    const cartModal = document.getElementById('cartModal');
-    const cartCloseButton = cartModal.querySelector('.close-button');
-    const cartItemsList = document.getElementById('cart-items-list');
-    const cartTotalElement = document.getElementById('cart-total');
-    const checkoutButton = document.getElementById('checkout-button');
-    const emptyCartMessage = document.getElementById('empty-cart-message');
+    let cartCount = null;
+    let cartModal = null;
+    let cartCloseButton = null;
+    let cartItemsList = null;
+    let cartTotalElement = null;
+    let checkoutButton = null;
+    let emptyCartMessage = null;
+
+    if (cartIconContainer) { // Só busca os elementos internos se o ícone do carrinho existir
+        cartCount = document.getElementById('cart-count');
+        cartModal = document.getElementById('cartModal');
+        if (cartModal) { // Só busca os elementos internos se o modal do carrinho existir
+            cartCloseButton = cartModal.querySelector('.close-button');
+            cartItemsList = document.getElementById('cart-items-list');
+            cartTotalElement = document.getElementById('cart-total');
+            checkoutButton = document.getElementById('checkout-button');
+            emptyCartMessage = document.getElementById('empty-cart-message');
+        }
+    }
 
     // --- Variáveis de Estado ---
-    let cart = []; // Array para armazenar os itens do carrinho
+    let cart = [];
 
     // --- Funções de Utilitário ---
     const checkLoginStatus = () => {
         const token = localStorage.getItem('authToken');
-        if (!token) {
-            window.location.href = 'login.html'; // Redireciona para a página de login
-            return false;
-        }
-        return true;
+        return !!token;
     };
 
     const formatPrice = (price) => {
@@ -60,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         saveCart();
         updateCartDisplay();
-        // Feedback visual para o usuário
         const productName = product.name.length > 20 ? product.name.substring(0, 17) + '...' : product.name;
         alert(`"${productName}" adicionado ao carrinho! Quantidade: ${existingItem ? existingItem.quantity : 1}`);
     };
@@ -84,70 +97,60 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateCartDisplay = () => {
-        cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
-        cartItemsList.innerHTML = ''; // Limpa a lista antes de renderizar
-        let total = 0;
+        // Só atualiza se os elementos existirem
+        if (cartCount && cartItemsList && cartTotalElement && checkoutButton && emptyCartMessage) {
+            cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+            cartItemsList.innerHTML = '';
+            let total = 0;
 
-        if (cart.length === 0) {
-            emptyCartMessage.style.display = 'block';
-            checkoutButton.disabled = true;
-            cartTotalElement.textContent = `Total: R$ 0,00`; // Garante que o total é 0
-        } else {
-            emptyCartMessage.style.display = 'none';
-            checkoutButton.disabled = false;
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                const itemElement = document.createElement('div');
-                itemElement.classList.add('cart-item');
-                itemElement.innerHTML = `
-                    <img src="${item.image_url || 'https://placehold.co/80x80/cccccc/333333?text=Sem+Imagem'}" alt="${item.name}">
-                    <div class="cart-item-details">
-                        <h4>${item.name}</h4>
-                        <p>R$ ${formatPrice(item.price)} cada</p>
-                        <p>Subtotal: R$ ${formatPrice(itemTotal)}</p>
-                    </div>
-                    <div class="cart-item-quantity">
-                        <button data-id="${item.id}" data-change="-1">-</button>
-                        <span>${item.quantity}</span>
-                        <button data-id="${item.id}" data-change="1">+</button>
-                    </div>
-                    <button class="cart-item-remove" data-id="${item.id}">Remover</button>
-                `;
-                cartItemsList.appendChild(itemElement);
-            });
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                checkoutButton.disabled = true;
+                cartTotalElement.textContent = `Total: R$ 0,00`;
+            } else {
+                emptyCartMessage.style.display = 'none';
+                checkoutButton.disabled = false;
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    const itemElement = document.createElement('div');
+                    itemElement.classList.add('cart-item');
+                    itemElement.innerHTML = `
+                        <img src="${item.image_url || 'https://placehold.co/80x80/cccccc/333333?text=Sem+Imagem'}" alt="${item.name}">
+                        <div class="cart-item-details">
+                            <h4>${item.name}</h4>
+                            <p>R$ ${formatPrice(item.price)} cada</p>
+                            <p>Subtotal: R$ ${formatPrice(itemTotal)}</p>
+                        </div>
+                        <div class="cart-item-quantity">
+                            <button data-id="${item.id}" data-change="-1">-</button>
+                            <span>${item.quantity}</span>
+                            <button data-id="${item.id}" data-change="1">+</button>
+                        </div>
+                        <button class="cart-item-remove" data-id="${item.id}">Remover</button>
+                    `;
+                    cartItemsList.appendChild(itemElement);
+                });
+            }
+            cartTotalElement.textContent = `Total: R$ ${formatPrice(total)}`;
         }
-        cartTotalElement.textContent = `Total: R$ ${formatPrice(total)}`;
     };
 
     // --- Funções de Busca e Exibição de Produtos ---
     const fetchAndDisplayProducts = async () => {
-        productsContainer.innerHTML = '<p class="message info">Carregando produtos do servidor...</p>';
-        const token = localStorage.getItem('authToken');
-
-        if (!token) {
-            productsContainer.innerHTML = '<p class="message error">Erro: Você não está logado. Redirecionando para o login...</p>';
-            window.location.href = 'login.html';
+        if (!productsContainer) { // Não faz nada se o container de produtos não existir
+            console.warn("Elemento 'product-grid' não encontrado. Não é uma página de loja.");
             return;
         }
 
+        productsContainer.innerHTML = '<p class="message info">Carregando produtos do servidor...</p>';
+
         try {
-            const response = await fetch(`${API_URL}/products`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const response = await fetch(`${API_URL}/products`);
 
             if (!response.ok) {
                 const errorData = await response.json();
-                if (response.status === 401 || response.status === 403) {
-                    productsContainer.innerHTML = '<p class="message error">Sua sessão expirou ou o token é inválido. Redirecionando para o login...</p>';
-                    localStorage.removeItem('authToken');
-                    window.location.href = 'login.html';
-                } else {
-                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-                }
-                return;
+                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
             }
 
             const products = await response.json();
@@ -173,47 +176,62 @@ document.addEventListener('DOMContentLoaded', () => {
                 productsContainer.innerHTML = '<p class="message info">Nenhum produto disponível no momento. Adicione produtos no painel de administração.</p>';
             }
         } catch (error) {
-            productsContainer.innerHTML = `<p class="message error">Erro ao carregar produtos: ${error.message}. Verifique a conexão com o backend.</p>`;
+            productsContainer.innerHTML = `<p class="message error">Erro ao carregar produtos: ${error.message}. Verifique a conexão com o backend ou se há produtos cadastrados.</p>`;
+            console.error('Error fetching products:', error);
         }
     };
 
     // --- Funções de Processamento de Pagamento ---
     const processPayment = async (event) => {
         event.preventDefault();
-        paymentMessage.textContent = 'Processando pagamento...';
-        paymentMessage.className = 'message info';
+        if (paymentMessage) paymentMessage.textContent = 'Processando pagamento...';
+        if (paymentMessage) paymentMessage.className = 'message info';
 
-        const cardNumber = document.getElementById('card-number').value;
-        const cardName = document.getElementById('card-name').value;
-        const expiryDate = document.getElementById('expiry-date').value;
-        const cvv = document.getElementById('cvv').value;
+        // Esses IDs devem ser buscados dentro da função, pois só são relevantes aqui
+        const cardNumberInput = document.getElementById('card-number');
+        const cardNameInput = document.getElementById('card-name');
+        const expiryDateInput = document.getElementById('expiry-date');
+        const cvvInput = document.getElementById('cvv');
+
+        const cardNumber = cardNumberInput ? cardNumberInput.value : '';
+        const cardName = cardNameInput ? cardNameInput.value : '';
+        const expiryDate = expiryDateInput ? expiryDateInput.value : '';
+        const cvv = cvvInput ? cvvInput.value : '';
+
         const simulatedPaymentToken = `tok_${Date.now()}_${Math.random().toString(36).substr(2, 10)}`;
 
         if (!cardNumber || !cardName || !expiryDate || !cvv) {
-            paymentMessage.textContent = 'Preencha todos os dados do cartão.';
-            paymentMessage.className = 'message error';
+            if (paymentMessage) {
+                paymentMessage.textContent = 'Preencha todos os dados do cartão.';
+                paymentMessage.className = 'message error';
+            }
             return;
         }
 
         if (cart.length === 0) {
-            paymentMessage.textContent = 'Erro: Carrinho vazio. Adicione produtos antes de pagar.';
-            paymentMessage.className = 'message error';
+            if (paymentMessage) {
+                paymentMessage.textContent = 'Erro: Carrinho vazio. Adicione produtos antes de pagar.';
+                paymentMessage.className = 'message error';
+            }
             return;
         }
 
         try {
-            // Simulação de sucesso do gateway. Em uma aplicação real, você integraria com um serviço de pagamento.
-            const isGatewaySuccess = true; 
+            const isGatewaySuccess = true;
             if (!isGatewaySuccess) {
-                paymentMessage.textContent = 'Falha na comunicação com o gateway de pagamento. Tente novamente.';
-                paymentMessage.className = 'message error';
+                if (paymentMessage) {
+                    paymentMessage.textContent = 'Falha na comunicação com o gateway de pagamento. Tente novamente.';
+                    paymentMessage.className = 'message error';
+                }
                 return;
             }
 
             const token = localStorage.getItem('authToken');
             if (!token) {
-                paymentMessage.textContent = 'Erro: Você não está logado. Faça login para comprar.';
-                paymentMessage.className = 'message error';
+                if (paymentMessage) {
+                    paymentMessage.textContent = 'Erro: Você não está logado. Faça login para comprar.';
+                    paymentMessage.className = 'message error';
+                }
                 window.location.href = 'login.html';
                 return;
             }
@@ -225,8 +243,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     price: item.price
                 })),
                 paymentToken: simulatedPaymentToken,
-                // Em uma integração real, você não enviaria dados sensíveis do cartão para o backend.
-                // Apenas o token gerado pelo gateway. Aqui mantemos para demonstrar a simulação.
                 cardNumber: cardNumber,
                 expiryDate: expiryDate,
                 cvv: cvv
@@ -245,117 +261,141 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 const totalCartPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                paymentMessage.textContent = `Pagamento de R$ ${formatPrice(totalCartPrice)} aprovado!`;
-                paymentMessage.className = 'message success';
-                cart = []; // Esvazia o carrinho após o pagamento
-                saveCart(); // Salva o carrinho vazio
-                updateCartDisplay(); // Atualiza o display do carrinho
+                if (paymentMessage) {
+                    paymentMessage.textContent = `Pagamento de R$ ${formatPrice(totalCartPrice)} aprovado!`;
+                    paymentMessage.className = 'message success';
+                }
+                cart = [];
+                saveCart();
+                updateCartDisplay();
 
                 setTimeout(() => {
-                    paymentModal.style.display = 'none';
-                    paymentForm.reset();
-                    fetchAndDisplayProducts(); // Opcional: recarregar produtos para atualizar estoque
+                    if (paymentModal) paymentModal.style.display = 'none';
+                    if (paymentForm) paymentForm.reset();
+                    fetchAndDisplayProducts();
                 }, 3000);
             } else {
-                paymentMessage.textContent = `Erro no pagamento: ${data.error || 'Falha na confirmação.'}`;
-                paymentMessage.className = 'message error';
+                if (paymentMessage) {
+                    paymentMessage.textContent = `Erro no pagamento: ${data.error || 'Falha na confirmação.'}`;
+                    paymentMessage.className = 'message error';
+                }
             }
         } catch (error) {
-            paymentMessage.textContent = 'Ocorreu um erro inesperado ao processar o pagamento.';
-            paymentMessage.className = 'message error';
+            if (paymentMessage) {
+                paymentMessage.textContent = 'Ocorreu um erro inesperado ao processar o pagamento.';
+                paymentMessage.className = 'message error';
+            }
             console.error('Payment processing error:', error);
         }
     };
 
     // --- Event Listeners ---
-    logoutButton.addEventListener('click', () => {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('cart'); // Limpa o carrinho ao sair
-        window.location.href = 'login.html';
-    });
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('cart');
+            window.location.href = 'login.html';
+        });
+    }
 
-    productsContainer.addEventListener('click', (event) => {
-        const addToCartButton = event.target.closest('.add-to-cart-button');
-        if (addToCartButton) {
-            if (!checkLoginStatus()) { // Garante que o usuário está logado
-                return;
-            }
-            const productId = addToCartButton.dataset.productId;
-            const token = localStorage.getItem('authToken');
-
-            fetch(`${API_URL}/products/${productId}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Produto não encontrado no servidor ou acesso negado.');
+    if (productsContainer) {
+        productsContainer.addEventListener('click', (event) => {
+            const addToCartButton = event.target.closest('.add-to-cart-button');
+            if (addToCartButton) {
+                if (!checkLoginStatus()) {
+                    alert('Você precisa estar logado para adicionar produtos ao carrinho.');
+                    window.location.href = 'login.html';
+                    return;
                 }
-                return response.json();
-            })
-            .then(product => {
-                addToCart(product);
-            })
-            .catch(error => {
-                alert(`Erro ao adicionar produto ao carrinho: ${error.message}`);
-                console.error('Error adding product to cart:', error);
-            });
-        }
-    });
+                const productId = addToCartButton.dataset.productId;
+                const token = localStorage.getItem('authToken');
 
-    cartIconContainer.addEventListener('click', () => {
-        cartModal.style.display = 'flex';
-        updateCartDisplay();
-    });
+                fetch(`${API_URL}/products/${productId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Produto não encontrado no servidor ou acesso negado.');
+                        }
+                        return response.json();
+                    })
+                    .then(product => {
+                        addToCart(product);
+                    })
+                    .catch(error => {
+                        alert(`Erro ao adicionar produto ao carrinho: ${error.message}`);
+                        console.error('Error adding product to cart:', error);
+                    });
+            }
+        });
+    }
 
-    cartCloseButton.addEventListener('click', () => {
-        cartModal.style.display = 'none';
-    });
-    // Fecha o modal do carrinho ao clicar fora dele
+    if (cartIconContainer) {
+        cartIconContainer.addEventListener('click', () => {
+            if (cartModal) cartModal.style.display = 'flex';
+            updateCartDisplay();
+        });
+    }
+
+    if (cartCloseButton) {
+        cartCloseButton.addEventListener('click', () => {
+            if (cartModal) cartModal.style.display = 'none';
+        });
+    }
+    // Adicionado tratamento para o window.addEventListener fora do if(cartModal)
+    // para fechar o modal ao clicar fora, mesmo se o cartIconContainer não existir.
     window.addEventListener('click', (event) => {
-        if (event.target === cartModal) {
+        if (cartModal && event.target === cartModal) { // Verifica se cartModal existe antes de comparar
             cartModal.style.display = 'none';
         }
-    });
-
-    paymentCloseButton.addEventListener('click', () => {
-        paymentModal.style.display = 'none';
-    });
-    // Fecha o modal de pagamento ao clicar fora dele
-    window.addEventListener('click', (event) => {
-        if (event.target === paymentModal) {
+        if (paymentModal && event.target === paymentModal) { // Verifica se paymentModal existe
             paymentModal.style.display = 'none';
         }
     });
 
-    checkoutButton.addEventListener('click', () => {
-        if (cart.length === 0) {
-            alert('Seu carrinho está vazio!');
-            return;
-        }
-        cartModal.style.display = 'none'; // Fecha o modal do carrinho
-        paymentModal.style.display = 'flex'; // Abre o modal de pagamento
-        paymentMessage.textContent = '';
-        paymentForm.reset();
-    });
 
-    paymentForm.addEventListener('submit', processPayment);
+    if (paymentCloseButton) {
+        paymentCloseButton.addEventListener('click', () => {
+            if (paymentModal) paymentModal.style.display = 'none';
+        });
+    }
 
-    cartItemsList.addEventListener('click', (event) => {
-        const target = event.target;
-        const productId = target.dataset.id;
 
-        if (target.tagName === 'BUTTON') {
-            if (target.dataset.change) { // Botões de + e -
-                updateQuantity(productId, parseInt(target.dataset.change));
-            } else if (target.classList.contains('cart-item-remove')) { // Botão Remover
-                removeFromCart(productId);
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Seu carrinho está vazio!');
+                return;
             }
-        }
-    });
+            if (cartModal) cartModal.style.display = 'none';
+            if (paymentModal) paymentModal.style.display = 'flex';
+            if (paymentMessage) paymentMessage.textContent = '';
+            if (paymentForm) paymentForm.reset();
+        });
+    }
+
+    if (paymentForm) {
+        paymentForm.addEventListener('submit', processPayment);
+    }
+
+    if (cartItemsList) {
+        cartItemsList.addEventListener('click', (event) => {
+            const target = event.target;
+            const productId = target.dataset.id;
+
+            if (target.tagName === 'BUTTON') {
+                if (target.dataset.change) {
+                    updateQuantity(productId, parseInt(target.dataset.change));
+                } else if (target.classList.contains('cart-item-remove')) {
+                    removeFromCart(productId);
+                }
+            }
+        });
+    }
 
     // --- Inicialização da Loja ---
-    if (checkLoginStatus()) { // Verifica login ao carregar a página da loja
+    if (productsContainer) { // Só tenta carregar produtos se estiver na página da loja
         fetchAndDisplayProducts();
-        loadCart(); // Carrega o carrinho ao iniciar
+        loadCart();
     }
 });
