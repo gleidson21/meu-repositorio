@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             registerMessage.className = 'message info';
 
             try {
-                const response = await fetch(`${API_URL}/register`, {
+                const response = await fetch(`${API_URL}/users`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
